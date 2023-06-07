@@ -13,6 +13,7 @@ import bcrypt from "bcrypt";
 // Modelos
 import { Author } from "../models/mongo/Author";
 import { generateToken } from "../utils/token";
+import { isAuth } from "../middlewares/auth.middleware";
 const upload = multer({ dest: "public" });
 
 export const authorRouter = express.Router();
@@ -244,11 +245,12 @@ authorRouter.post("/", async (req: Request, res: Response, next: NextFunction) =
  *         description: Internal server error
  */
 
-authorRouter.delete("/:id", async (req: any, res: Response, next: NextFunction) => {
+authorRouter.delete("/:id", isAuth, async (req: any, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
+    console.log(req.author)
 
-    if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
+    if (req.author.id !== id && req.author.email !== "admin@gmail.com") {
       return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
     }
 
@@ -307,11 +309,11 @@ authorRouter.delete("/:id", async (req: any, res: Response, next: NextFunction) 
  *         description: Internal server error
  */
 
-authorRouter.put("/:id", async (req: any, res: Response, next: NextFunction) => {
+authorRouter.put("/:id", isAuth, async (req: any, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
 
-    if (req.user.id !== id && req.user.email !== "admin@gmail.com") {
+    if (req.author.id !== id && req.author.email !== "admin@gmail.com") {
       return res.status(401).json({ error: "No tienes autorización para realizar esta operación" });
     }
 
@@ -431,22 +433,22 @@ authorRouter.post("/login", async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({ error: "Se deben especificar los campos email y password" });
     }
 
-    const user = await Author.findOne({ email }).select("+password");
-    if (!user) {
+    const author = await Author.findOne({ email }).select("+password");
+    if (!author) {
       // return res.status(404).json({ error: "No existe un usuario con ese email" });
       // Por seguridad mejor no indicar qué usuarios no existen
       return res.status(401).json({ error: "Email y/o contraseña incorrectos" });
     }
 
     // Comprueba la pass
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, author.password);
     if (match) {
       // Quitamos password de la respuesta
-      const userWithoutPass: any = user.toObject();
-      delete userWithoutPass.password;
+      const authorWithoutPass: any = author.toObject();
+      delete authorWithoutPass.password;
 
       // Generamos token JWT
-      const jwtToken = generateToken(user._id.toString(), user.email);
+      const jwtToken = generateToken(author._id.toString(), author.email);
 
       return res.status(200).json({ token: jwtToken });
     } else {

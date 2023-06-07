@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import { mongoConnect } from "../databases/mongo-db.js";
 import { Book, type IBook } from "../models/mongo/Book.js";
-import { faker } from "@faker-js/faker";
 
 const bookList: IBook[] = [
   {

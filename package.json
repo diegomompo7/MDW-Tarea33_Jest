@@ -12,8 +12,9 @@
     "build:swagger-json": "ts-node-dev ./src/utils/generate-swagger-json.ts --ingore-watch",
     "build": "tsc",
     "test:author-seed": "cross-env DB_NAME=API-BOOK-DEVELOPMENT jest",
+    "test:author-get": "cross-env DB_NAME=API-BOOK-DEVELOPMENT jest",
     "prepare": "husky install",
-    "seed:player": "ts-node-dev ./src/seeds/Player.seed.ts --ignore-watch",
+    "seed:author": "ts-node-dev ./src/seeds/author.seed.ts --ignore-watch",
     "seed:playerteam": "ts-node-dev ./src/seeds/team-and-player.seed.ts --ignore-watch"
   },
   "repository": {
