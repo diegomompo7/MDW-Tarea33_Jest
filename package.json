@@ -11,8 +11,7 @@
     "start:debugts": "ts-node-dev --inspect -- ./src/index.ts",
     "build:swagger-json": "ts-node-dev ./src/utils/generate-swagger-json.ts --ingore-watch",
     "build": "tsc",
-    "test:author-seed": "cross-env DB_NAME=API-BOOK-DEVELOPMENT jest",
-    "test:author-get": "cross-env DB_NAME=API-BOOK-DEVELOPMENT jest",
+    "test": "cross-env DB_NAME=API-BOOK-DEVELOPMENT jest",
     "prepare": "husky install",
     "seed:author": "ts-node-dev ./src/seeds/author.seed.ts --ignore-watch",
     "seed:playerteam": "ts-node-dev ./src/seeds/team-and-player.seed.ts --ignore-watch"
